@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+  </head>
+  <body>
+    <input type="text" id="city" placeholder="Enter City Name" />
+    <button id="search">Search</button>
+
+    <div>
+      <h3 id="name"></h3>
+      <h6 id="time"></h6>
+      <p id="temp"></p>
+      <img src="" alt="" id="img" />
+    </div>
+
+    <script>
+      const city = document.getElementById("city");
+      const searchBtn = document.getElementById("search");
+
+      const name = document.getElementById("name");
+      const time = document.getElementById("time");
+      const temp = document.getElementById("temp");
+      const img = document.getElementById("img");
+
+      async function getData(city) {
+        const fetchData = await fetch(
+          `http://api.weatherapi.com/v1/current.json?key=e435cfc32f7e404893c114341242208&q=${city}&aqi=yes`
+        );
+
+        return await fetchData.json();
+      }
+
+      searchBtn.addEventListener("click", async () => {
+        const value = city.value;
+        const result = await getData(value); // Await the promise here
+
+        name.innerText = `${result.location.name} - ${result.location.region} - ${result.location.country}`;
+        time.innerText = result.location.localtime;
+        temp.innerText = `${result.current.temp_c} °C`;
+        img.setAttribute("src", result.current.condition.icon);
+        console.log(result.location.name);
+      });
+    </script>
+  </body>
+</html>
